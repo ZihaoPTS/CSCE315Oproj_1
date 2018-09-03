@@ -41,8 +41,9 @@ while flag == 0:
 			elif input_seperate[0] == "AddGame":
 				name = re.search('"(.+?)"',input).group(1)
 				games.append({"gameID":input_seperate[1],	\
-					"gameName":name,			\
+					"gameName":name,						\
 					"gameVictory":[],						\
+					#avoiding need for recreate these each time player gets a copy of it
 					"victoryGet":0,							\
 					"points":0,								\
 					"gamePlayer":[],							\
@@ -86,22 +87,27 @@ while flag == 0:
 			#WinVictory <Player ID> <Game ID> <Victory ID>
 			elif input_seperate[0] == "WinVictory":
 				points_won = 0
+				game_index = 0
+				player_index = 0
 				for i in range(len(games)): #seek games
 					if games[i]["gameID"] == input_seperate[2]:
-						for j in range(len(games[i]["gameVictory"])): #seek victory in games
-							if games[i]["gameVictory"][j]["victoryID"] == input_seperate[3]:
-								games[i]["gameVictory"][j]["vicotryPlayer"].append(input_seperate[1])
-								points_won += games[i]["gameVictory"][j]["victoryPoints"]
-								break
+						game_index = i
+						break
+				for i in range(len(games[game_index]["gameVictory"])): #seek victory in games
+					if games[game_index]["gameVictory"][i]["victoryID"] == input_seperate[3]:
+						games[game_index]["gameVictory"][i]["vicotryPlayer"].append(input_seperate[1])
+						points_won = games[game_index]["gameVictory"][i]["victoryPoints"]
 						break
 				for i in range(len(players)): #seeking player
 					if players[i]["playerID"] == input_seperate[1]:
+						player_index = i
 						players[i]["points"] += points_won
-						for j in range(len(players[i]["playerGames"])): #seeking game in player
-							if players[i]["playerGames"][j]["gameID"] == input_seperate[2]:
-								players[i]["playerGames"][j]["victoryGet"]+=1 #increment victory count
-								players[i]["playerGames"][j]["points"] += points_won
-								break
+						break
+				for i in range(len(players[player_index]["playerGames"])): #seeking game in player
+					if players[player_index]["playerGames"][i]["gameID"] == input_seperate[2]:
+						#increment victory count
+						players[player_index]["playerGames"][i]["victoryGet"]+= 1 
+						players[player_index]["playerGames"][i]["points"] += points_won
 						break
 			#FriendsWhoPlay <Player ID> <Game ID>
 			elif input_seperate[0] == "FriendsWhoPlay":
