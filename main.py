@@ -55,7 +55,7 @@ while flag == 0:
 					if games[i]["gameID"] == input_seperate[1]:
 						games[i]["gameVictory"].append({	\
 							"victoryID":input_seperate[2],	\
-							"victoryName":name,\
+							"victoryName":name,				\
 							"victoryPoints":int(input_seperate[len(input_seperate)-1]),\
 							"vicotryPlayer":[]})
 						break
@@ -70,9 +70,14 @@ while flag == 0:
 						break
 				for i in range(len(players)):
 					if players[i]["playerID"] == input_seperate[1]:
-						players[i]["playerGames"].append(games[gameindex])
-						players[i]["playerGames"][len(players[i]	\
-							["playerGames"])-1]["IGN"] = name
+						#players[i]["playerGames"].append(game)
+						#^note to self that this will make a pointer to the class rather than make a pointer
+						players[i]["playerGames"].append({	\
+							"gameName":games[gameindex]["gameName"],	\
+							"gameID":games[gameindex]["gameID"],		\
+							"victoryGet":0,		\
+							"points":0,			\
+							"IGN":name})
 						break
 			#AddFriends <Player ID1> <Player ID2>
 			elif input_seperate[0] == "AddFriends":
